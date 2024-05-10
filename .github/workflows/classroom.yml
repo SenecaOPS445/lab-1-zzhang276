@@ -1,0 +1,60 @@
+name: Autograding Tests
+'on':
+- workflow_dispatch
+- repository_dispatch
+permissions:
+  checks: write
+  actions: read
+  contents: read
+jobs:
+  run-autograding-tests:
+    runs-on: ubuntu-latest
+    if: github.actor != 'github-classroom[bot]'
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+    - name: lab1a
+      id: lab1a
+      uses: classroom-resources/autograding-command-grader@v1
+      with:
+        test-name: lab1a
+        setup-command: ''
+        command: python3 ./CheckLab1.py -f -v lab1a
+        timeout: 10
+        max-score: 1
+    - name: lab1b
+      id: lab1b
+      uses: classroom-resources/autograding-command-grader@v1
+      with:
+        test-name: lab1b
+        setup-command: ''
+        command: python3 ./CheckLab1.py -f -v lab1b
+        timeout: 10
+        max-score: 1
+    - name: lab1c
+      id: lab1c
+      uses: classroom-resources/autograding-command-grader@v1
+      with:
+        test-name: lab1c
+        setup-command: ''
+        command: python3 ./CheckLab1.py -f -v lab1c
+        timeout: 10
+        max-score: 1
+    - name: lab1d
+      id: lab1d
+      uses: classroom-resources/autograding-command-grader@v1
+      with:
+        test-name: lab1d
+        setup-command: ''
+        command: python3 ./CheckLab1.py -f -v lab1d
+        timeout: 10
+        max-score: 1
+    - name: Autograding Reporter
+      uses: classroom-resources/autograding-grading-reporter@v1
+      env:
+        LAB1A_RESULTS: "${{steps.lab1a.outputs.result}}"
+        LAB1B_RESULTS: "${{steps.lab1b.outputs.result}}"
+        LAB1C_RESULTS: "${{steps.lab1c.outputs.result}}"
+        LAB1D_RESULTS: "${{steps.lab1d.outputs.result}}"
+      with:
+        runners: lab1a,lab1b,lab1c,lab1d
